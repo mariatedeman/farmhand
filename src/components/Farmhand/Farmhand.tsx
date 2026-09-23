@@ -112,18 +112,20 @@ const Farmhand = (props: FarmhandProps) => {
                 '& .sidebar-wrapper': { display: 'flex' },
                 '& .bottom-controls': {
                   alignItems: 'center',
-                  bottom: '1em',
+                  bottom: '0',
                   display: 'flex',
                   flexFlow: 'column',
                   justifyContent: 'center',
-                  left: '50%',
+                  // left: '0',
                   opacity: 0.85,
                   position: 'fixed',
-                  transition: t.transitions.create('left', {
+                  transition: t.transitions.create(['left', 'padding-left'], {
                     duration: t.transitions.duration.enteringScreen,
                     easing: t.transitions.easing.easeOut,
                   }),
-                  width: 0,
+                  width: '95vw',
+                  height: '6em',
+                  background: 'lightblue',
                   zIndex: 20,
                   [`@media (max-width: ${breakpoints.mediumPhone}px)`]: {
                     bottom: '0.5em',
@@ -145,7 +147,7 @@ const Farmhand = (props: FarmhandProps) => {
                   },
                   ...(state.isMenuOpen && {
                     '@media (orientation: landscape)': {
-                      left: `calc(50vw + ${layout.sidebarWidth} / 2)`,
+                      paddingLeft: layout.sidebarWidth,
                     },
                   }),
                 },
@@ -188,7 +190,7 @@ const Farmhand = (props: FarmhandProps) => {
                     padding: '1em 1em 0',
                     position: 'relative',
                     width: layout.sidebarWidth,
-                    zIndex: 20,
+                    zIndex: 21,
                     [`@media (max-width: ${breakpoints.smallPhone}px)`]: {
                       width: layout.narrowSidebarWidth,
                     },

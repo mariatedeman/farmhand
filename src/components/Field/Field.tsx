@@ -551,6 +551,7 @@ export const Field = (props: FieldProps) => {
             display: 'flex',
             flexDirection: 'column',
             bottom: '1em',
+            zIndex: '22',
             '@media (orientation: portrait)': {
               display: isMenuOpen ? 'none' : undefined,
             },
