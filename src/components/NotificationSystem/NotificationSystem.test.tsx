@@ -1,10 +1,15 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { SnackbarProvider } from 'notistack'
 
-import { NotificationSystem, getNotificationKey } from './NotificationSystem.js'
+import {
+  NotificationSystem,
+  getNotificationKey,
+  snackbarProviderContentCallback,
+} from './NotificationSystem.js'
 
 const defaultProps = {
+  closeSnackbar: vitest.fn(),
   enqueueSnackbar: vitest.fn(),
   latestNotification: null,
 }
@@ -42,11 +47,32 @@ test('calls enqueueSnackbar with a content-derived key when latestNotification i
     />
   )
 
-  expect(enqueueSnackbar).toHaveBeenCalledWith(latestNotification, {
-    key: 'info:Test notification',
-    autoHideDuration: 1, // NOTIFICATION_DURATION in test mode
-    preventDuplicate: true,
+  expect(enqueueSnackbar).toHaveBeenCalledWith(
+    {
+      ...latestNotification,
+      onClose: expect.any(Function),
+    },
+    {
+      key: 'info:Test notification',
+      autoHideDuration: 1, // NOTIFICATION_DURATION in test mode
+      preventDuplicate: true,
+    }
+  )
+})
+
+test('closes a notification when its close button is clicked', () => {
+  const closeSnackbar = vitest.fn()
+  const notification = snackbarProviderContentCallback('notification-key', {
+    message: 'Test notification',
+    onClose: () => closeSnackbar('notification-key'),
+    severity: 'info',
   })
+
+  render(notification as React.ReactElement)
+
+  screen.getByRole('button', { name: 'Close' }).click()
+
+  expect(closeSnackbar).toHaveBeenCalledWith('notification-key')
 })
 
 test('does not call enqueueSnackbar when latestNotification is null', () => {
@@ -83,11 +109,17 @@ test('re-enqueues notification when latestNotification changes to a different me
   )
 
   expect(enqueueSnackbar).toHaveBeenCalledTimes(1)
-  expect(enqueueSnackbar).toHaveBeenCalledWith(initialNotification, {
-    key: getNotificationKey(initialNotification),
-    autoHideDuration: 1,
-    preventDuplicate: true,
-  })
+  expect(enqueueSnackbar).toHaveBeenCalledWith(
+    expect.objectContaining({
+      ...initialNotification,
+      onClose: expect.any(Function),
+    }),
+    {
+      key: getNotificationKey(initialNotification),
+      autoHideDuration: 1,
+      preventDuplicate: true,
+    }
+  )
 
   // Change the notification
   rerender(
@@ -101,11 +133,17 @@ test('re-enqueues notification when latestNotification changes to a different me
   )
 
   expect(enqueueSnackbar).toHaveBeenCalledTimes(2)
-  expect(enqueueSnackbar).toHaveBeenLastCalledWith(newNotification, {
-    key: getNotificationKey(newNotification),
-    autoHideDuration: 1,
-    preventDuplicate: true,
-  })
+  expect(enqueueSnackbar).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      ...newNotification,
+      onClose: expect.any(Function),
+    }),
+    {
+      key: getNotificationKey(newNotification),
+      autoHideDuration: 1,
+      preventDuplicate: true,
+    }
+  )
 })
 
 test('uses the same key for repeated notifications with identical message and severity, letting notistack dedupe them', () => {

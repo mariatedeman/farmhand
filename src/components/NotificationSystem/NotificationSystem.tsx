@@ -17,14 +17,19 @@ export const snackbarProviderContentCallback = (
   {
     message,
     onClick,
+    onClose,
     severity,
-  }: farmhand.notification & { onClick?: () => void }
+  }: farmhand.notification & {
+    onClick?: () => void
+    onClose?: () => void
+  }
 ) => (
   <Alert
     {...{
       elevation: 3,
       key,
       onClick,
+      onClose,
       severity,
       style: {
         cursor: onClick ? 'pointer' : 'default',
@@ -36,10 +41,15 @@ export const snackbarProviderContentCallback = (
 )
 
 export const NotificationSystem = ({
+  closeSnackbar,
   enqueueSnackbar,
   latestNotification,
 }: {
-  enqueueSnackbar: (notification: farmhand.notification, options: any) => void
+  closeSnackbar: (key: string | number) => void
+  enqueueSnackbar: (
+    notification: farmhand.notification & { onClose?: () => void },
+    options: any
+  ) => void
   latestNotification: farmhand.notification | null
 }) => {
   useEffect(() => {
@@ -47,18 +57,24 @@ export const NotificationSystem = ({
       return
     }
 
+    const key = getNotificationKey(latestNotification)
+
     // A stable, content-derived key (rather than a fresh object identity
     // every call) is what lets preventDuplicate below actually do
     // something - it skips enqueueing when a snack with this key is
-    // already shown or queued, instead of stacking a duplicate. notistack
-    // handles the rest of the lifecycle itself (auto-hide, then removal)
-    // once autoHideDuration and a key are set - no onClose needed here.
-    enqueueSnackbar(latestNotification, {
-      key: getNotificationKey(latestNotification),
-      autoHideDuration: NOTIFICATION_DURATION,
-      preventDuplicate: true,
-    })
-  }, [enqueueSnackbar, latestNotification])
+    // already shown or queued, instead of stacking a duplicate.
+    enqueueSnackbar(
+      {
+        ...latestNotification,
+        onClose: () => closeSnackbar(key),
+      },
+      {
+        key,
+        autoHideDuration: NOTIFICATION_DURATION,
+        preventDuplicate: true,
+      }
+    )
+  }, [closeSnackbar, enqueueSnackbar, latestNotification])
 
   return null
 }
