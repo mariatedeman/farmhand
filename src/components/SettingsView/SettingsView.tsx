@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { bool, func } from 'prop-types'
+import { bool, func, number } from 'prop-types'
 import Button from '@mui/material/Button/index.js'
 import Dialog from '@mui/material/Dialog/index.js'
 import DialogActions from '@mui/material/DialogActions/index.js'
@@ -11,11 +11,16 @@ import FormControlLabel from '@mui/material/FormControlLabel/index.js'
 import FormGroup from '@mui/material/FormGroup/index.js'
 import FormLabel from '@mui/material/FormLabel/index.js'
 import Switch from '@mui/material/Switch/index.js'
+import Slider from '@mui/material/Slider/index.js'
 import Tooltip from '@mui/material/Tooltip/index.js'
 import FileReaderInput from 'react-file-reader-input'
 
 import FarmhandContext from '../Farmhand/Farmhand.context.js'
 import { Div } from '../Elements/index.js'
+import {
+  NOTIFICATION_DURATION_MAX,
+  NOTIFICATION_DURATION_MIN,
+} from '../../constants.js'
 
 import { RandomSeedInput } from './RandomSeedInput.js'
 
@@ -26,10 +31,12 @@ const SettingsView = ({
   handleExportDataClick,
   handleImportDataClick,
   handleSaveButtonClick,
+  handleNotificationDurationChange,
   handleShowNotificationsChange,
   handleUseAlternateEndDayButtonPositionChange,
   handleShowHomeScreenChange,
   showNotifications,
+  notificationDuration,
   useAlternateEndDayButtonPosition,
   showHomeScreen,
 }: {
@@ -41,6 +48,10 @@ const SettingsView = ({
   handleExportDataClick: () => void
   handleImportDataClick: (results: any) => void
   handleSaveButtonClick: () => void
+  handleNotificationDurationChange: (
+    event: React.SyntheticEvent | Event,
+    value: number | number[]
+  ) => void
   handleShowNotificationsChange: (
     event: React.ChangeEvent<HTMLInputElement>
   ) => void
@@ -51,6 +62,7 @@ const SettingsView = ({
     event: React.ChangeEvent<HTMLInputElement>
   ) => void
   showNotifications: boolean
+  notificationDuration: number
   useAlternateEndDayButtonPosition: boolean
   showHomeScreen: boolean
 }) => {
@@ -109,6 +121,18 @@ const SettingsView = ({
               />
             }
             label="Show new notifications"
+          />
+          <FormLabel component="legend">Notification display time</FormLabel>
+          <Slider
+            aria-label="Notification display time"
+            marks
+            min={NOTIFICATION_DURATION_MIN}
+            max={NOTIFICATION_DURATION_MAX}
+            onChange={handleNotificationDurationChange}
+            sx={{ margin: '0 auto', width: '90%' }}
+            value={notificationDuration}
+            valueLabelDisplay="on"
+            valueLabelFormat={value => `${value} seconds`}
           />
           <FormControlLabel
             control={
@@ -237,11 +261,13 @@ SettingsView.propTypes = {
   handleExportDataClick: func.isRequired,
   handleImportDataClick: func.isRequired,
   handleSaveButtonClick: func.isRequired,
+  handleNotificationDurationChange: func.isRequired,
   handleShowHomeScreenChange: func.isRequired,
   handleShowNotificationsChange: func.isRequired,
   handleUseAlternateEndDayButtonPositionChange: func.isRequired,
   showHomeScreen: bool.isRequired,
   showNotifications: bool.isRequired,
+  notificationDuration: number.isRequired,
   useAlternateEndDayButtonPosition: bool.isRequired,
 }
 
