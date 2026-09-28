@@ -9,6 +9,7 @@ import eventHandlers from '../../handlers/ui-events.js'
 import {
   DEFAULT_ROOM,
   INITIAL_STORAGE_LIMIT,
+  NOTIFICATION_DURATION_DEFAULT,
   STAGE_TITLE_MAP,
   STANDARD_LOAN_AMOUNT,
 } from '../../constants.js'
@@ -125,6 +126,7 @@ export const useFarmhand = (props: FarmhandProps) => {
       latestNotification: null,
       newDayNotifications: [],
       notificationLog: [],
+      notificationDuration: NOTIFICATION_DURATION_DEFAULT,
       peers: {},
       peerRoom: null,
       pendingPeerMessages: [],

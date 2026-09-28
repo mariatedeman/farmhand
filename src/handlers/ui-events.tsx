@@ -460,6 +460,23 @@ export default {
     this.setState({ showNotifications: checked })
   },
 
+  async handleNotificationDurationChange(
+    this: Farmhand,
+    _event: React.SyntheticEvent | Event,
+    value: number | number[]
+  ) {
+    if (typeof value === 'number') {
+      const newState = { notificationDuration: value }
+
+      this.setState(newState)
+
+      await (this.props.localforage as any)?.setItem(
+        'state',
+        reduceByPersistedKeys({ ...this.state, ...newState })
+      )
+    }
+  },
+
   handleClickNotificationIndicator(this: Farmhand) {
     this.openDialogView(dialogView.FARMERS_LOG)
   },
