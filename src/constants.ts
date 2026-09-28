@@ -347,6 +347,15 @@ export const KEG_SPOILAGE_RATE_MULTIPLIER = 0.001
 export const WINE_INTEREST_RATE = 0.015
 export const WINE_GROWTH_TIMELINE_CAP = 100
 
+// Upper bounds (exclusive) of the keg spoilage rate for each display label.
+// Any rate at or above the last threshold is labeled "Very high".
+export const KEG_SPOILAGE_RATE_LABEL_THRESHOLDS = {
+  'Very low': 0.05,
+  Low: 0.15,
+  Medium: 0.35,
+  High: 0.6,
+}
+
 // NOTE: not all of these are implemented yet, these are for all the currently
 // planned experience rewards
 export const EXPERIENCE_VALUES = {

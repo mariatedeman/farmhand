@@ -11,6 +11,7 @@ import { cellarService } from '../../services/cellar.js'
 import { wineService } from '../../services/wine.js'
 import { getKegDisplayName } from '../../utils/getKegDisplayName.js'
 import { getKegSpoilageRate } from '../../utils/getKegSpoilageRate.js'
+import { getKegSpoilageRateLabel } from '../../utils/getKegSpoilageRateLabel.js'
 import { getKegValue } from '../../utils/getKegValue.js'
 import { getSalePriceMultiplier } from '../../utils/getSalePriceMultiplier.js'
 import { moneyString } from '../../utils/moneyString.js'
@@ -47,7 +48,7 @@ export function Keg({ keg }: { keg: farmhand.keg }) {
   }
 
   const spoilageRate = getKegSpoilageRate(keg)
-  const spoilageRateDisplayValue = Number((spoilageRate * 100).toPrecision(2))
+  const spoilageRateLabel = getKegSpoilageRateLabel(spoilageRate)
 
   return (
     <Card
@@ -82,7 +83,7 @@ export function Keg({ keg }: { keg: farmhand.keg }) {
                   />
                 </p>
                 {cellarService.doesKegSpoil(keg) && (
-                  <p>Potential for spoilage: {spoilageRateDisplayValue}%</p>
+                  <p>Potential for spoilage: {spoilageRateLabel}</p>
                 )}
               </>
             ) : (
