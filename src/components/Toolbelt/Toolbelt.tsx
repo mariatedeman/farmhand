@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import ReactMarkdown from 'react-markdown'
 
@@ -144,11 +143,6 @@ export const Toolbelt = ({
       </Div>
     </Div>
   )
-}
-
-Toolbelt.propTypes = {
-  fieldMode: PropTypes.string.isRequired,
-  handleFieldModeSelect: PropTypes.func,
 }
 
 Toolbelt.defaultProps = {
